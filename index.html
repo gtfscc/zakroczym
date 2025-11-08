@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>zakroczym.gtfs.cc</title>
+  <title>GTFS File Tree - Zakroczym</title>
   <link href="styles.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   <style>
@@ -102,25 +102,31 @@
         ]
     };
 
-    function generateFileTreeHTML(tree) {
-      const li = document.createElement("li");
-      const span = document.createElement("span");
-      span.textContent = tree.name;
-      li.appendChild(span);
+function generateFileTreeHTML(tree) {
+  const li = document.createElement("li");
 
-      if (tree.children) {
-        li.classList.add("directory", "expanded");
-        const ul = document.createElement("ul");
-        tree.children.forEach(child => {
-          ul.appendChild(generateFileTreeHTML(child));
-        });
-        li.appendChild(ul);
-      } else {
-        li.classList.add("file");
-        li.dataset.path = tree.path;
-      }
-      return li;
-    }
+  if (tree.children) {
+    li.classList.add("directory", "expanded");
+    const span = document.createElement("span");
+    span.textContent = tree.name;
+    li.appendChild(span);
+
+    const ul = document.createElement("ul");
+    tree.children.forEach(child => {
+      ul.appendChild(generateFileTreeHTML(child));
+    });
+    li.appendChild(ul);
+  } else {
+    li.classList.add("file");
+    const link = document.createElement("a");
+    link.textContent = tree.name;
+    link.href = tree.path;
+    link.download = tree.name;
+    li.appendChild(link);
+  }
+
+  return li;
+}
 
     function renderFileTree(container, tree) {
       const html = generateFileTreeHTML(tree);
